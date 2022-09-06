@@ -1,0 +1,37 @@
+# AWS CodeBuild.yml
+version: 0.2
+
+
+env:
+  variables:
+      TF_VERSION: "1.0.5"
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    on-failure: ABORT
+    commands:
+      - if [ -f /usr/local/bin/terraform ] ; then echo "Already File DownLoad"; else wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip ; fi
+      - if [ -f /usr/local/bin/terraform ] ; then echo "Already File Unzip" ; else unzip terraform_${TF_VERSION}_linux_amd64.zip ; fi
+      - if [ -f /usr/local/bin/terraform ] ; then echo "Already File Replace" ; else mv terraform /usr/local/bin/ ; fi
+
+  pre_build:
+    on-failure: ABORT
+    commands:
+      - cd environments/aws_production/
+      - cd ./${DEPLOYDIR}
+      - pwd
+      - ls -alth ./
+
+
+  build:
+    on-failure: ABORT
+    commands:
+      - terraform init -var-file=_"$ENV".tfvars
+      - terraform plan -var-file=_"$ENV".tfvars
+      - terraform apply -auto-approve -var-file=_"$ENV".tfvars
+
+  post_build:
+    commands:
+      - echo terraform apply completed on `date`
+

@@ -1,0 +1,11 @@
+# Docker centos7_apache2.4_php7.4.1/centos7_mysqldX.X
+### Images
+services:
+  terraform_deploy:
+    build:
+      context: ./docker_terraform/
+    container_name: "terraform"
+    volumes:
+      - ../../terraform:/root/terraform
+    privileged: true
+    command: /sbin/init

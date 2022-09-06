@@ -1,0 +1,15 @@
+organizations
+codebuild
+codecommit
+apigateawy
+lambda
+dynamodb
+ec2
+ecs
+ecr
+elb
+s3
+cloudwatchlogs
+iam
+security_group
+network
